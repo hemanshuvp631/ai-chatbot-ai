@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chatbot</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!--
+    ══════════════════════════════════════════════════════════
+    Main chat card – everything visible lives inside here
+    ══════════════════════════════════════════════════════════
+  -->
+  <div class="chat-card">
+
+    <!-- ── Header bar ─────────────────────────────────────────────────── -->
+    <header class="chat-header">
+      <div class="header-icon">🤖</div>
+      <div>
+        <div class="header-title">AI Assistant</div>
+        <div class="header-subtitle">Powered by Claude · ask me anything</div>
+      </div>
+      <!-- Clears the current conversation and starts fresh -->
+      <button class="clear-btn" id="clear-btn" title="Start a new conversation">
+        ✕ New chat
+      </button>
+    </header>
+
+    <!-- ── Transcript (scrollable message area) ───────────────────────── -->
+    <div class="chat-transcript" id="transcript">
+
+      <!--
+        Welcome placeholder – shown when no messages exist yet.
+        app.js hides this as soon as the first message is sent.
+      -->
+      <div class="welcome" id="welcome">
+        <div class="welcome-emoji">💬</div>
+        <h2>Start a conversation</h2>
+        <p>Type a message below and press <strong>Enter</strong> (or click Send).</p>
+      </div>
+
+    </div>
+    <!-- end #transcript -->
+
+    <!-- ── Error banner – hidden by default, shown by app.js on errors ─ -->
+    <div class="error-banner hidden" id="error-banner" role="alert">
+      ⚠️ <span id="error-text"></span>
+    </div>
+
+    <!-- ── Character counter ───────────────────────────────────────────── -->
+    <div class="input-meta">
+      <span class="char-count" id="char-count">0 / 2000</span>
+    </div>
+
+    <!-- ── Input area ─────────────────────────────────────────────────── -->
+    <div class="chat-input-area">
+
+      <!--
+        Textarea instead of <input> so the user can write multi-line messages.
+        app.js auto-resizes it as the user types.
+        Pressing Enter sends; Shift+Enter inserts a newline.
+      -->
+      <textarea
+        id="message-input"
+        rows="1"
+        placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+        aria-label="Chat message input"
+        autocomplete="off"
+        spellcheck="true"
+      ></textarea>
+
+      <!-- Send button with a paper-plane SVG icon -->
+      <button id="send-btn" aria-label="Send message" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+
+    </div>
+    <!-- end .chat-input-area -->
+
+  </div>
+  <!-- end .chat-card -->
+
+  <!-- Load our JavaScript last so all DOM elements above are available -->
+  <script src="app.js"></script>
+
+</body>
+</html>

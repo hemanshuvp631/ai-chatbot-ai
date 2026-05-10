@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chatbot – Project Guide</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root { --brand: #6c63ff; }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Code blocks */
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      position: relative;
+    }
+
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    }
+
+    .token-comment { color: #64748b; }
+    .token-key     { color: #93c5fd; }
+    .token-val     { color: #86efac; }
+    .token-cmd     { color: #fde68a; }
+    .token-kw      { color: #c4b5fd; }
+
+    /* Syntax-highlighted inline code */
+    p code, li code {
+      background: #f1f0fe;
+      color: #4f46e5;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.83em;
+    }
+
+    /* Copy button */
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #cbd5e1;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: sans-serif;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.22); }
+
+    /* Step number badge */
+    .step-badge {
+      background: #6c63ff;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Section anchor offset for sticky nav */
+    section { scroll-margin-top: 72px; }
+
+    /* Sticky nav shadow */
+    nav { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+    /* Tab active state */
+    .os-tab.active {
+      background: #6c63ff;
+      color: white;
+    }
+
+    /* File tree */
+    .tree { font-family: 'Cascadia Code','Fira Code','Consolas',monospace; font-size: 0.85rem; line-height: 2; }
+    .tree .dir  { color: #60a5fa; }
+    .tree .file { color: #86efac; }
+    .tree .note { color: #94a3b8; font-size: 0.78rem; }
+
+    /* Callout boxes */
+    .callout-warn  { border-left: 4px solid #f59e0b; background: #fffbeb; }
+    .callout-info  { border-left: 4px solid #6c63ff; background: #f5f3ff; }
+    .callout-ok    { border-left: 4px solid #10b981; background: #ecfdf5; }
+    .callout-error { border-left: 4px solid #ef4444; background: #fef2f2; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       STICKY NAVIGATION
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <nav class="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto">
+      <span class="text-lg mr-2">🤖</span>
+      <a href="#overview"    class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">Overview</a>
+      <a href="#structure"   class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">File Structure</a>
+      <a href="#files"       class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">All Files</a>
+      <a href="#setup"       class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">Setup</a>
+      <a href="#apikey"      class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">API Key</a>
+      <a href="#deploy"      class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">Deploy</a>
+      <a href="#problems"    class="text-sm font-medium px-3 py-1 rounded-full hover:bg-purple-50 hover:text-purple-700 whitespace-nowrap">Troubleshoot</a>
+    </div>
+  </nav>
+
+  <div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         HERO
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="overview" class="mb-14">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="text-5xl">🤖</div>
+        <div>
+          <h1 class="text-3xl font-extrabold text-gray-900">Beginner AI Chatbot</h1>
+          <p class="text-gray-500 text-sm mt-1">HTML + CSS + JS frontend · Python FastAPI backend · Anthropic Claude</p>
+        </div>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed mb-6 max-w-3xl">
+        This is a complete, fully working chatbot you can run on your own computer and deploy online.
+        It calls the <strong>Anthropic Claude API</strong> from a <strong>Python backend</strong> so your
+        secret API key is never exposed to the browser. The frontend is plain HTML/CSS/JavaScript — no React needed.
+      </p>
+
+      <!-- Feature badges -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full">Claude 3.5 Sonnet</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">FastAPI + Python</span>
+        <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Session history</span>
+        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-3 py-1 rounded-full">CORS configured</span>
+        <span class="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">API key hidden</span>
+        <span class="bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">No database</span>
+        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">Deploy to Render + Netlify</span>
+      </div>
+
+      <!-- Architecture diagram (text-based) -->
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h2 class="font-bold text-gray-700 mb-4 text-sm uppercase tracking-wider">Architecture</h2>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 text-sm">
+          <div class="bg-purple-50 border border-purple-200 rounded-lg px-5 py-3 text-center">
+            <div class="text-xl mb-1">🌐</div>
+            <div class="font-semibold text-purple-800">Browser</div>
+            <div class="text-purple-600 text-xs">client/index.html</div>
+          </div>
+          <div class="text-gray-400 font-mono text-xs text-center">
+            POST /api/chat<br/>X-Session-Id header<br/>──────────────►<br/>◄──────────────<br/>{ "reply": "..." }
+          </div>
+          <div class="bg-blue-50 border border-blue-200 rounded-lg px-5 py-3 text-center">
+            <div class="text-xl mb-1">⚡</div>
+            <div class="font-semibold text-blue-800">FastAPI</div>
+            <div class="text-blue-600 text-xs">server/main.py</div>
+          </div>
+          <div class="text-gray-400 font-mono text-xs text-center">
+            messages.create()<br/>──────────────►<br/>◄──────────────<br/>reply text
+          </div>
+          <div class="bg-orange-50 border border-orange-200 rounded-lg px-5 py-3 text-center">
+            <div class="text-xl mb-1">🧠</div>
+            <div class="font-semibold text-orange-800">Claude API</div>
+            <div class="text-orange-600 text-xs">api.anthropic.com</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FOLDER STRUCTURE
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="structure" class="mb-14">
+      <h2 class="text-2xl font-bold mb-2">📁 Folder Structure</h2>
+      <p class="text-gray-500 text-sm mb-4">Create this layout on your computer. Each file is shown below.</p>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <div class="tree">
+<span class="dir">my-chatbot/</span>
+├── <span class="dir">server/</span>               <span class="note"># Python backend</span>
+│   ├── <span class="file">main.py</span>           <span class="note"># FastAPI app + Anthropic calls</span>
+│   ├── <span class="file">requirements.txt</span>  <span class="note"># Python dependencies</span>
+│   ├── <span class="file">.env.example</span>      <span class="note"># Template — copy to .env</span>
+│   └── <span class="file">.env</span>              <span class="note"># YOUR SECRET KEY — never commit!</span>
+│
+└── <span class="dir">client/</span>               <span class="note"># HTML frontend</span>
+    ├── <span class="file">index.html</span>        <span class="note"># Chat UI markup</span>
+    ├── <span class="file">style.css</span>         <span class="note"># All styles</span>
+    └── <span class="file">app.js</span>            <span class="note"># Frontend logic</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         ALL FILES
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="files" class="mb-14">
+      <h2 class="text-2xl font-bold mb-6">📄 Complete File Code</h2>
+      <p class="text-gray-500 text-sm mb-6">Copy each block and save it as the file shown in the heading.</p>
+
+      <!-- server/main.py -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">server/main.py</span>
+          <span class="text-gray-400 text-xs">FastAPI backend — the brain of the operation</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-main-py"><button class="copy-btn" onclick="copyCode('code-main-py', this)">Copy</button><span class="token-comment">"""
+main.py  –  FastAPI backend for the AI Chatbot
+------------------------------------------------
+Run it with:
+    uvicorn main:app --reload --port 8000
+"""</span>
+
+<span class="token-kw">import</span> os
+<span class="token-kw">import</span> uuid
+<span class="token-kw">from</span> dotenv <span class="token-kw">import</span> load_dotenv
+<span class="token-kw">import</span> anthropic
+
+<span class="token-kw">from</span> fastapi <span class="token-kw">import</span> FastAPI, HTTPException, Header
+<span class="token-kw">from</span> fastapi.middleware.cors <span class="token-kw">import</span> CORSMiddleware
+<span class="token-kw">from</span> pydantic <span class="token-kw">import</span> BaseModel
+
+<span class="token-comment"># ── 1. Load .env ─────────────────────────────────────────────────────────────</span>
+load_dotenv()
+
+<span class="token-comment"># ── 2. Constants ──────────────────────────────────────────────────────────────</span>
+CLAUDE_MODEL  = <span class="token-val">"claude-3-5-sonnet-20241022"</span>
+SYSTEM_PROMPT = <span class="token-val">"You are a helpful, friendly assistant."</span>
+MAX_TOKENS    = <span class="token-val">1024</span>
+
+<span class="token-comment"># ── 3. In-memory session store ────────────────────────────────────────────────</span>
+<span class="token-comment"># sessions[session_id] = [{"role":"user","content":"..."}, ...]</span>
+sessions: dict[str, list[dict]] = {}
+
+<span class="token-comment"># ── 4. Anthropic client ───────────────────────────────────────────────────────</span>
+api_key = os.getenv(<span class="token-val">"ANTHROPIC_API_KEY"</span>)
+<span class="token-kw">if not</span> api_key:
+    <span class="token-kw">raise</span> RuntimeError(<span class="token-val">"ANTHROPIC_API_KEY not set. Check server/.env"</span>)
+
+claude = anthropic.Anthropic(api_key=api_key)
+
+<span class="token-comment"># ── 5. FastAPI app ────────────────────────────────────────────────────────────</span>
+app = FastAPI(title=<span class="token-val">"AI Chatbot Backend"</span>)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="token-val">"*"</span>],   <span class="token-comment"># ← Change to your frontend URL in production</span>
+    allow_methods=[<span class="token-val">"*"</span>],
+    allow_headers=[<span class="token-val">"*"</span>],
+)
+
+<span class="token-comment"># ── 6. Schemas ────────────────────────────────────────────────────────────────</span>
+<span class="token-kw">class</span> ChatRequest(BaseModel):
+    message: str
+
+<span class="token-kw">class</span> ChatResponse(BaseModel):
+    reply: str
+
+<span class="token-comment"># ── 7. Chat endpoint ──────────────────────────────────────────────────────────</span>
+@app.post(<span class="token-val">"/api/chat"</span>, response_model=ChatResponse)
+<span class="token-kw">async def</span> chat(
+    body: ChatRequest,
+    x_session_id: str | None = Header(default=<span class="token-val">None</span>),
+):
+    message_text = body.message.strip()
+    <span class="token-kw">if not</span> message_text:
+        <span class="token-kw">raise</span> HTTPException(status_code=<span class="token-val">400</span>, detail=<span class="token-val">"Message cannot be empty."</span>)
+
+    session_id = x_session_id <span class="token-kw">or</span> str(uuid.uuid4())
+
+    <span class="token-kw">if</span> session_id <span class="token-kw">not in</span> sessions:
+        sessions[session_id] = []
+
+    history = sessions[session_id]
+    history.append({<span class="token-val">"role"</span>: <span class="token-val">"user"</span>, <span class="token-val">"content"</span>: message_text})
+
+    <span class="token-kw">try</span>:
+        response = claude.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=MAX_TOKENS,
+            system=SYSTEM_PROMPT,
+            messages=history,
+        )
+    <span class="token-kw">except</span> anthropic.AuthenticationError:
+        <span class="token-kw">raise</span> HTTPException(status_code=<span class="token-val">500</span>, detail=<span class="token-val">"Invalid Anthropic API key."</span>)
+    <span class="token-kw">except</span> anthropic.RateLimitError:
+        <span class="token-kw">raise</span> HTTPException(status_code=<span class="token-val">429</span>, detail=<span class="token-val">"Rate limit reached. Try again."</span>)
+    <span class="token-kw">except</span> anthropic.APIStatusError <span class="token-kw">as</span> e:
+        <span class="token-kw">raise</span> HTTPException(status_code=<span class="token-val">502</span>, detail=f<span class="token-val">"Anthropic error: {e.message}"</span>)
+    <span class="token-kw">except</span> Exception <span class="token-kw">as</span> e:
+        <span class="token-kw">raise</span> HTTPException(status_code=<span class="token-val">500</span>, detail=f<span class="token-val">"Unexpected error: {str(e)}"</span>)
+
+    reply_text = response.content[<span class="token-val">0</span>].text
+    history.append({<span class="token-val">"role"</span>: <span class="token-val">"assistant"</span>, <span class="token-val">"content"</span>: reply_text})
+
+    <span class="token-kw">return</span> ChatResponse(reply=reply_text)
+
+<span class="token-comment"># ── 8. Health check ───────────────────────────────────────────────────────────</span>
+@app.get(<span class="token-val">"/health"</span>)
+<span class="token-kw">async def</span> health():
+    <span class="token-kw">return</span> {<span class="token-val">"status"</span>: <span class="token-val">"ok"</span>}</pre>
+        </div>
+      </div>
+
+      <!-- server/requirements.txt -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">server/requirements.txt</span>
+          <span class="text-gray-400 text-xs">Python dependencies</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-req"><button class="copy-btn" onclick="copyCode('code-req', this)">Copy</button>fastapi==0.115.5
+uvicorn[standard]==0.32.1
+anthropic==0.40.0
+python-dotenv==1.0.1
+pydantic==2.10.3</pre>
+        </div>
+      </div>
+
+      <!-- server/.env.example -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">server/.env.example</span>
+          <span class="text-gray-400 text-xs">Copy this to <code>.env</code> and fill in your key</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-env"><button class="copy-btn" onclick="copyCode('code-env', this)">Copy</button><span class="token-comment"># Copy to .env then fill in your real key.
+# NEVER commit .env to git!</span>
+
+<span class="token-key">ANTHROPIC_API_KEY</span>=<span class="token-val">sk-ant-your-key-here</span></pre>
+        </div>
+      </div>
+
+      <!-- client/index.html -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">client/index.html</span>
+          <span class="text-gray-400 text-xs">Chat UI markup</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-html"><button class="copy-btn" onclick="copyCode('code-html', this)">Copy</button>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;title&gt;AI Chatbot&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="chat-card"&gt;
+
+    &lt;!-- Header --&gt;
+    &lt;header class="chat-header"&gt;
+      &lt;div class="header-icon"&gt;🤖&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div class="header-title"&gt;AI Assistant&lt;/div&gt;
+        &lt;div class="header-subtitle"&gt;Powered by Claude · ask me anything&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;button class="clear-btn" id="clear-btn"&gt;✕ New chat&lt;/button&gt;
+    &lt;/header&gt;
+
+    &lt;!-- Transcript --&gt;
+    &lt;div class="chat-transcript" id="transcript"&gt;
+      &lt;div class="welcome" id="welcome"&gt;
+        &lt;div class="welcome-emoji"&gt;💬&lt;/div&gt;
+        &lt;h2&gt;Start a conversation&lt;/h2&gt;
+        &lt;p&gt;Type a message below and press &lt;strong&gt;Enter&lt;/strong&gt;.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Error banner --&gt;
+    &lt;div class="error-banner hidden" id="error-banner" role="alert"&gt;
+      ⚠️ &lt;span id="error-text"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Character counter --&gt;
+    &lt;div class="input-meta"&gt;
+      &lt;span class="char-count" id="char-count"&gt;0 / 2000&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Input area --&gt;
+    &lt;div class="chat-input-area"&gt;
+      &lt;textarea
+        id="message-input"
+        rows="1"
+        placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+        aria-label="Chat message input"
+        autocomplete="off"
+        spellcheck="true"
+      &gt;&lt;/textarea&gt;
+
+      &lt;button id="send-btn" aria-label="Send message" title="Send"&gt;
+        &lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"&gt;
+          &lt;line x1="22" y1="2" x2="11" y2="13"&gt;&lt;/line&gt;
+          &lt;polygon points="22 2 15 22 11 13 2 9 22 2"&gt;&lt;/polygon&gt;
+        &lt;/svg&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+  &lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+      </div>
+
+      <!-- client/style.css -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">client/style.css</span>
+          <span class="text-gray-400 text-xs">Complete stylesheet</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-css"><button class="copy-btn" onclick="copyCode('code-css', this)">Copy</button><span class="token-comment">/* Reset */</span>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand:       #6c63ff;
+  --brand-dark:  #574fd6;
+  --bg-page:     #f0f2f5;
+  --bg-card:     #ffffff;
+  --bg-user-msg: #6c63ff;
+  --bg-ai-msg:   #f1f0fe;
+  --text-main:   #1a1a2e;
+  --text-muted:  #6b7280;
+  --text-user:   #ffffff;
+  --text-ai:     #1a1a2e;
+  --border:      #e5e7eb;
+  --shadow:      0 4px 24px rgba(0,0,0,0.08);
+  --radius-msg:  18px;
+  --radius-card: 16px;
+  --font:        'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-page);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.chat-card {
+  width: 100%; max-width: 760px;
+  height: 90vh; max-height: 820px;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 24px;
+  background: var(--brand); color: #fff;
+  flex-shrink: 0;
+}
+.header-icon { font-size: 1.6rem; }
+.header-title { font-size: 1.15rem; font-weight: 700; }
+.header-subtitle { font-size: 0.78rem; opacity: 0.82; margin-top: 1px; }
+.clear-btn {
+  margin-left: auto;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; font-size: 0.78rem;
+  padding: 5px 12px; border-radius: 20px;
+  cursor: pointer; transition: background 0.2s;
+}
+.clear-btn:hover { background: rgba(255,255,255,0.30); }
+
+.chat-transcript {
+  flex: 1; overflow-y: auto;
+  padding: 24px 20px;
+  display: flex; flex-direction: column; gap: 14px;
+  scroll-behavior: smooth;
+}
+
+.message {
+  display: flex; align-items: flex-end; gap: 8px;
+  max-width: 82%;
+  animation: fadeUp 0.25s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.message.user { align-self: flex-end; flex-direction: row-reverse; }
+.message.ai   { align-self: flex-start; }
+
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.message.user .avatar { background: #ddd6fe; }
+.message.ai   .avatar { background: #e0e7ff; }
+
+.bubble {
+  padding: 10px 15px;
+  line-height: 1.6; font-size: 0.93rem;
+  word-break: break-word; white-space: pre-wrap;
+}
+.message.user .bubble {
+  background: var(--bg-user-msg); color: var(--text-user);
+  border-radius: var(--radius-msg) var(--radius-msg) 4px var(--radius-msg);
+}
+.message.ai .bubble {
+  background: var(--bg-ai-msg); color: var(--text-ai);
+  border-radius: var(--radius-msg) var(--radius-msg) var(--radius-msg) 4px;
+}
+
+.welcome {
+  margin: auto; text-align: center;
+  color: var(--text-muted); padding: 32px 16px;
+}
+.welcome-emoji { font-size: 3rem; margin-bottom: 12px; }
+.welcome h2    { font-size: 1.1rem; margin-bottom: 6px; color: var(--text-main); }
+.welcome p     { font-size: 0.85rem; }
+
+.loading-row { align-self: flex-start; display: flex; align-items: center; gap: 8px; }
+.loading-dots {
+  display: flex; gap: 5px; padding: 12px 16px;
+  background: var(--bg-ai-msg);
+  border-radius: var(--radius-msg) var(--radius-msg) var(--radius-msg) 4px;
+}
+.loading-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--brand);
+  animation: bounce 1.2s infinite ease-in-out;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40%            { transform: scale(1.0); opacity: 1;   }
+}
+
+.error-banner {
+  margin: 0 20px; padding: 10px 16px;
+  background: #fef2f2; border: 1px solid #fecaca;
+  border-radius: 10px; color: #b91c1c; font-size: 0.85rem;
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.error-banner.hidden { display: none; }
+
+.chat-input-area {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
+}
+#message-input {
+  flex: 1; resize: none;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 10px 14px; font-family: var(--font); font-size: 0.93rem;
+  line-height: 1.5; outline: none; max-height: 140px; overflow-y: auto;
+  transition: border-color 0.2s;
+}
+#message-input:focus { border-color: var(--brand); }
+
+#send-btn {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--brand); color: #fff; border: none;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+  transition: background 0.2s, transform 0.1s;
+}
+#send-btn:hover:not(:disabled) { background: var(--brand-dark); }
+#send-btn:active:not(:disabled) { transform: scale(0.94); }
+#send-btn:disabled { background: #c4b5fd; cursor: not-allowed; }
+#send-btn svg { width: 20px; height: 20px; }
+
+.input-meta { display: flex; justify-content: flex-end; padding: 0 20px 8px; flex-shrink: 0; }
+.char-count { font-size: 0.75rem; color: var(--text-muted); }
+.char-count.warn { color: #d97706; }
+.char-count.over { color: #dc2626; }
+
+@media (max-width: 520px) {
+  .chat-card { height: 100vh; max-height: none; border-radius: 0; }
+  .message { max-width: 92%; }
+  body { padding: 0; }
+}</pre>
+        </div>
+      </div>
+
+      <!-- client/app.js -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">client/app.js</span>
+          <span class="text-gray-400 text-xs">All frontend JavaScript</span>
+        </div>
+        <div style="position:relative">
+          <pre id="code-js"><button class="copy-btn" onclick="copyCode('code-js', this)">Copy</button><span class="token-comment">/**
+ * app.js – Frontend logic for the AI Chatbot
+ * Change API_BASE_URL when you deploy the backend!
+ */</span>
+
+<span class="token-comment">// ── 1. Config ──────────────────────────────────────────────────────────────</span>
+<span class="token-kw">const</span> API_BASE_URL = <span class="token-val">"http://localhost:8000"</span>; <span class="token-comment">// ← change for production</span>
+
+<span class="token-comment">// ── 2. Session ID (stored in localStorage) ────────────────────────────────</span>
+<span class="token-kw">function</span> getOrCreateSessionId() {
+  <span class="token-kw">let</span> id = localStorage.getItem(<span class="token-val">"chatSessionId"</span>);
+  <span class="token-kw">if</span> (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(<span class="token-val">"chatSessionId"</span>, id);
+  }
+  <span class="token-kw">return</span> id;
+}
+<span class="token-kw">const</span> SESSION_ID = getOrCreateSessionId();
+
+<span class="token-comment">// ── 3. DOM refs ───────────────────────────────────────────────────────────</span>
+<span class="token-kw">const</span> transcript   = document.getElementById(<span class="token-val">"transcript"</span>);
+<span class="token-kw">const</span> messageInput = document.getElementById(<span class="token-val">"message-input"</span>);
+<span class="token-kw">const</span> sendBtn      = document.getElementById(<span class="token-val">"send-btn"</span>);
+<span class="token-kw">const</span> errorBanner  = document.getElementById(<span class="token-val">"error-banner"</span>);
+<span class="token-kw">const</span> errorText    = document.getElementById(<span class="token-val">"error-text"</span>);
+<span class="token-kw">const</span> charCount    = document.getElementById(<span class="token-val">"char-count"</span>);
+<span class="token-kw">const</span> welcomeEl    = document.getElementById(<span class="token-val">"welcome"</span>);
+<span class="token-kw">const</span> MAX_CHARS    = <span class="token-val">2000</span>;
+
+<span class="token-comment">// ── 4. Auto-resize textarea ───────────────────────────────────────────────</span>
+messageInput.addEventListener(<span class="token-val">"input"</span>, () => {
+  messageInput.style.height = <span class="token-val">"auto"</span>;
+  messageInput.style.height = Math.min(messageInput.scrollHeight, <span class="token-val">140</span>) + <span class="token-val">"px"</span>;
+  updateCharCount();
+});
+
+<span class="token-kw">function</span> updateCharCount() {
+  <span class="token-kw">const</span> len = messageInput.value.length;
+  charCount.textContent = `${len} / ${MAX_CHARS}`;
+  charCount.className = <span class="token-val">"char-count"</span>;
+  <span class="token-kw">if</span> (len > MAX_CHARS * <span class="token-val">0.85</span>) charCount.classList.add(<span class="token-val">"warn"</span>);
+  <span class="token-kw">if</span> (len > MAX_CHARS)        charCount.classList.add(<span class="token-val">"over"</span>);
+}
+
+<span class="token-comment">// ── 5. Send on Enter (Shift+Enter = newline) ──────────────────────────────</span>
+messageInput.addEventListener(<span class="token-val">"keydown"</span>, (e) => {
+  <span class="token-kw">if</span> (e.key === <span class="token-val">"Enter"</span> && !e.shiftKey) {
+    e.preventDefault();
+    handleSend();
+  }
+});
+sendBtn.addEventListener(<span class="token-val">"click"</span>, handleSend);
+
+<span class="token-comment">// ── 6. Clear button ───────────────────────────────────────────────────────</span>
+document.getElementById(<span class="token-val">"clear-btn"</span>).addEventListener(<span class="token-val">"click"</span>, () => {
+  <span class="token-kw">const</span> newId = crypto.randomUUID();
+  localStorage.setItem(<span class="token-val">"chatSessionId"</span>, newId);
+  location.reload();
+});
+
+<span class="token-comment">// ── 7. Main send handler ──────────────────────────────────────────────────</span>
+<span class="token-kw">async function</span> handleSend() {
+  <span class="token-kw">const</span> text = messageInput.value.trim();
+
+  <span class="token-kw">if</span> (!text) { showError(<span class="token-val">"Please type a message."</span>); <span class="token-kw">return</span>; }
+  <span class="token-kw">if</span> (text.length > MAX_CHARS) {
+    showError(`Too long (max ${MAX_CHARS} chars).`); <span class="token-kw">return</span>;
+  }
+
+  hideError();
+  hideWelcome();
+  appendMessage(<span class="token-val">"user"</span>, text);
+  messageInput.value = <span class="token-val">""</span>;
+  messageInput.style.height = <span class="token-val">"auto"</span>;
+  updateCharCount();
+  setLoading(<span class="token-val">true</span>);
+
+  <span class="token-kw">try</span> {
+    <span class="token-kw">const</span> response = <span class="token-kw">await</span> fetch(`${API_BASE_URL}/api/chat`, {
+      method: <span class="token-val">"POST"</span>,
+      headers: {
+        <span class="token-val">"Content-Type"</span>: <span class="token-val">"application/json"</span>,
+        <span class="token-val">"X-Session-Id"</span>: SESSION_ID,
+      },
+      body: JSON.stringify({ message: text }),
+    });
+
+    <span class="token-kw">if</span> (!response.ok) {
+      <span class="token-kw">let</span> detail = `Server error (${response.status})`;
+      <span class="token-kw">try</span> { <span class="token-kw">const</span> e = <span class="token-kw">await</span> response.json(); detail = e.detail || detail; } <span class="token-kw">catch</span> (_) {}
+      <span class="token-kw">throw new</span> Error(detail);
+    }
+
+    <span class="token-kw">const</span> data = <span class="token-kw">await</span> response.json();
+    appendMessage(<span class="token-val">"ai"</span>, data.reply);
+
+  } <span class="token-kw">catch</span> (err) {
+    showError(err.message || <span class="token-val">"Could not reach the server."</span>);
+  } <span class="token-kw">finally</span> {
+    setLoading(<span class="token-val">false</span>);
+    messageInput.focus();
+  }
+}
+
+<span class="token-comment">// ── 8. Render a message bubble ────────────────────────────────────────────</span>
+<span class="token-kw">function</span> appendMessage(role, text) {
+  <span class="token-kw">const</span> wrapper = document.createElement(<span class="token-val">"div"</span>);
+  wrapper.classList.add(<span class="token-val">"message"</span>, role);
+
+  <span class="token-kw">const</span> avatar = document.createElement(<span class="token-val">"div"</span>);
+  avatar.classList.add(<span class="token-val">"avatar"</span>);
+  avatar.textContent = role === <span class="token-val">"user"</span> ? <span class="token-val">"🧑"</span> : <span class="token-val">"🤖"</span>;
+
+  <span class="token-kw">const</span> bubble = document.createElement(<span class="token-val">"div"</span>);
+  bubble.classList.add(<span class="token-val">"bubble"</span>);
+  bubble.textContent = text;   <span class="token-comment">// textContent prevents XSS</span>
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(bubble);
+  transcript.appendChild(wrapper);
+  scrollToBottom();
+}
+
+<span class="token-comment">// ── 9. Loading dots ───────────────────────────────────────────────────────</span>
+<span class="token-kw">let</span> loadingRow = <span class="token-val">null</span>;
+<span class="token-kw">function</span> setLoading(isLoading) {
+  sendBtn.disabled = isLoading;
+  messageInput.disabled = isLoading;
+  <span class="token-kw">if</span> (isLoading) {
+    loadingRow = document.createElement(<span class="token-val">"div"</span>);
+    loadingRow.classList.add(<span class="token-val">"loading-row"</span>);
+    loadingRow.innerHTML = `
+      &lt;div class="avatar"&gt;🤖&lt;/div&gt;
+      &lt;div class="loading-dots"&gt;
+        &lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;
+      &lt;/div&gt;`;
+    transcript.appendChild(loadingRow);
+    scrollToBottom();
+  } <span class="token-kw">else</span> {
+    <span class="token-kw">if</span> (loadingRow) { loadingRow.remove(); loadingRow = <span class="token-val">null</span>; }
+  }
+}
+
+<span class="token-comment">// ── 10. Error helpers ─────────────────────────────────────────────────────</span>
+<span class="token-kw">function</span> showError(msg) {
+  errorText.textContent = msg;
+  errorBanner.classList.remove(<span class="token-val">"hidden"</span>);
+}
+<span class="token-kw">function</span> hideError() {
+  errorBanner.classList.add(<span class="token-val">"hidden"</span>);
+  errorText.textContent = <span class="token-val">""</span>;
+}
+<span class="token-kw">function</span> hideWelcome() { <span class="token-kw">if</span> (welcomeEl) welcomeEl.style.display = <span class="token-val">"none"</span>; }
+<span class="token-kw">function</span> scrollToBottom() { transcript.scrollTop = transcript.scrollHeight; }
+
+messageInput.addEventListener(<span class="token-val">"input"</span>, hideError);</pre>
+        </div>
+      </div>
+
+    </section>
+    <!-- end #files -->
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         API KEY SETUP
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="apikey" class="mb-14">
+      <h2 class="text-2xl font-bold mb-4">🔑 Setting Up Your Anthropic API Key</h2>
+
+      <div class="callout-warn rounded-xl p-5 mb-6 text-sm">
+        <p class="font-semibold text-amber-800 mb-1">⚠️ Keep your key secret!</p>
+        <p class="text-amber-700">Never share your <code>.env</code> file or paste your key into the browser code.
+        The backend hides it from the frontend. Never commit <code>.env</code> to Git.</p>
+      </div>
+
+      <ol class="space-y-5">
+        <li class="flex gap-4">
+          <span class="step-badge">1</span>
+          <div>
+            <p class="font-semibold">Go to <a href="https://console.anthropic.com/" target="_blank" class="text-purple-600 underline">console.anthropic.com</a></p>
+            <p class="text-sm text-gray-500 mt-1">Sign in (or create a free account), then navigate to <strong>API Keys</strong>.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="step-badge">2</span>
+          <div>
+            <p class="font-semibold">Create a new API key and copy it</p>
+            <p class="text-sm text-gray-500 mt-1">It starts with <code>sk-ant-api03-…</code>. You only see it once — copy it now.</p>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="step-badge">3</span>
+          <div>
+            <p class="font-semibold">Create <code>server/.env</code> from the example</p>
+            <div style="position:relative" class="mt-2">
+              <pre id="code-envsetup"><button class="copy-btn" onclick="copyCode('code-envsetup', this)">Copy</button><span class="token-comment"># Mac / Linux</span>
+<span class="token-cmd">cp server/.env.example server/.env</span>
+
+<span class="token-comment"># Windows (Command Prompt)</span>
+<span class="token-cmd">copy server\.env.example server\.env</span></pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="step-badge">4</span>
+          <div>
+            <p class="font-semibold">Open <code>server/.env</code> and paste your key</p>
+            <div style="position:relative" class="mt-2">
+              <pre id="code-envfill"><button class="copy-btn" onclick="copyCode('code-envfill', this)">Copy</button><span class="token-key">ANTHROPIC_API_KEY</span>=<span class="token-val">sk-ant-api03-YOUR-REAL-KEY-HERE</span></pre>
+            </div>
+          </div>
+        </li>
+        <li class="flex gap-4">
+          <span class="step-badge">5</span>
+          <div>
+            <p class="font-semibold">Make sure <code>.env</code> is in your <code>.gitignore</code></p>
+            <div style="position:relative" class="mt-2">
+              <pre id="code-gitignore"><button class="copy-btn" onclick="copyCode('code-gitignore', this)">Copy</button><span class="token-comment"># Add this line to .gitignore (create the file if it doesn't exist)</span>
+server/.env</pre>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SETUP & RUN LOCALLY
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="setup" class="mb-14">
+      <h2 class="text-2xl font-bold mb-4">⚙️ Local Setup & Run Instructions</h2>
+
+      <!-- OS tabs -->
+      <div class="flex gap-2 mb-5">
+        <button class="os-tab active px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 transition-all" onclick="switchTab('mac')">Mac / Linux</button>
+        <button class="os-tab px-4 py-2 rounded-lg text-sm font-semibold border border-gray-200 transition-all bg-white text-gray-600" onclick="switchTab('win')">Windows</button>
+      </div>
+
+      <!-- Mac / Linux -->
+      <div id="tab-mac">
+        <ol class="space-y-6">
+          <li class="flex gap-4">
+            <span class="step-badge">1</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Create the project folder and files</p>
+              <p class="text-sm text-gray-500 mb-2">Make the folders and paste each file from the section above.</p>
+              <div style="position:relative">
+                <pre id="mac-s1"><button class="copy-btn" onclick="copyCode('mac-s1', this)">Copy</button>mkdir -p my-chatbot/server my-chatbot/client
+cd my-chatbot</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">2</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Create and activate a Python virtual environment</p>
+              <div style="position:relative">
+                <pre id="mac-s2"><button class="copy-btn" onclick="copyCode('mac-s2', this)">Copy</button>cd server
+python3 -m venv venv
+source venv/bin/activate</pre>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Your prompt will show <code>(venv)</code> when active.</p>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">3</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Install Python dependencies</p>
+              <div style="position:relative">
+                <pre id="mac-s3"><button class="copy-btn" onclick="copyCode('mac-s3', this)">Copy</button>pip install -r requirements.txt</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">4</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Add your API key (see API Key section above)</p>
+              <div style="position:relative">
+                <pre id="mac-s4"><button class="copy-btn" onclick="copyCode('mac-s4', this)">Copy</button>cp .env.example .env
+nano .env     # or open in any text editor</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">5</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Start the FastAPI backend</p>
+              <div style="position:relative">
+                <pre id="mac-s5"><button class="copy-btn" onclick="copyCode('mac-s5', this)">Copy</button>uvicorn main:app --reload --port 8000</pre>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">You should see: <code>Uvicorn running on http://127.0.0.1:8000</code></p>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">6</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Open the frontend in your browser</p>
+              <p class="text-sm text-gray-500">Open a <strong>new terminal tab</strong> (keep uvicorn running!), then simply open the file:</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="mac-s6"><button class="copy-btn" onclick="copyCode('mac-s6', this)">Copy</button><span class="token-comment"># Option A: double-click client/index.html in Finder</span>
+
+<span class="token-comment"># Option B: open from terminal</span>
+open ../client/index.html
+
+<span class="token-comment"># Option C: use a simple local server (avoids file:// quirks)</span>
+cd ../client
+python3 -m http.server 3000
+<span class="token-comment"># then visit http://localhost:3000</span></pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Windows -->
+      <div id="tab-win" class="hidden">
+        <ol class="space-y-6">
+          <li class="flex gap-4">
+            <span class="step-badge">1</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Open Command Prompt (or PowerShell) and create folders</p>
+              <div style="position:relative">
+                <pre id="win-s1"><button class="copy-btn" onclick="copyCode('win-s1', this)">Copy</button>mkdir my-chatbot\server
+mkdir my-chatbot\client
+cd my-chatbot</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">2</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Create and activate a Python virtual environment</p>
+              <div style="position:relative">
+                <pre id="win-s2"><button class="copy-btn" onclick="copyCode('win-s2', this)">Copy</button">cd server
+python -m venv venv
+venv\Scripts\activate</pre>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Your prompt will show <code>(venv)</code> when active.</p>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">3</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Install Python dependencies</p>
+              <div style="position:relative">
+                <pre id="win-s3"><button class="copy-btn" onclick="copyCode('win-s3', this)">Copy</button>pip install -r requirements.txt</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">4</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Add your API key</p>
+              <div style="position:relative">
+                <pre id="win-s4"><button class="copy-btn" onclick="copyCode('win-s4', this)">Copy</button>copy .env.example .env
+notepad .env</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">5</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Start the FastAPI backend</p>
+              <div style="position:relative">
+                <pre id="win-s5"><button class="copy-btn" onclick="copyCode('win-s5', this)">Copy</button>uvicorn main:app --reload --port 8000</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-4">
+            <span class="step-badge">6</span>
+            <div class="flex-1">
+              <p class="font-semibold mb-2">Open the frontend</p>
+              <p class="text-sm text-gray-500">Open a <strong>new</strong> Command Prompt window (keep uvicorn running!).</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="win-s6"><button class="copy-btn" onclick="copyCode('win-s6', this)">Copy</button">REM Option A: double-click client\index.html in File Explorer
+
+REM Option B: open from Command Prompt
+start ..\client\index.html
+
+REM Option C: use a simple local server
+cd ..\client
+python -m http.server 3000
+REM then visit http://localhost:3000</pre>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         CORS EXPLANATION
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section class="mb-14">
+      <h2 class="text-2xl font-bold mb-4">🔒 CORS Configuration</h2>
+      <div class="callout-info rounded-xl p-5 text-sm">
+        <p class="font-semibold text-indigo-800 mb-2">What is CORS and why does it matter?</p>
+        <p class="text-indigo-700 mb-3">
+          CORS (Cross-Origin Resource Sharing) is a browser security feature that blocks a web page from
+          calling an API on a different domain/port unless the server explicitly allows it.
+          Our frontend (port 3000) and backend (port 8000) are different origins, so we must configure CORS.
+        </p>
+        <p class="text-indigo-700">
+          In <code>server/main.py</code> we add the <code>CORSMiddleware</code> with <code>allow_origins=["*"]</code>
+          (allow all origins). <strong>In production, replace <code>"*"</code> with your exact Netlify URL</strong>
+          like <code>"https://my-chatbot.netlify.app"</code> for better security.
+        </p>
+      </div>
+      <div style="position:relative" class="mt-4">
+        <pre id="code-cors"><button class="copy-btn" onclick="copyCode('code-cors', this)">Copy</button><span class="token-comment"># In server/main.py – change for production:</span>
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="token-val">"https://my-chatbot.netlify.app"</span>],  <span class="token-comment"># ← your Netlify URL</span>
+    allow_methods=[<span class="token-val">"POST"</span>, <span class="token-val">"GET"</span>],
+    allow_headers=[<span class="token-val">"Content-Type"</span>, <span class="token-val">"X-Session-Id"</span>],
+)</pre>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         DEPLOYMENT
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="deploy" class="mb-14">
+      <h2 class="text-2xl font-bold mb-6">🚀 Deployment Instructions</h2>
+
+      <!-- Backend → Render -->
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="text-2xl">⚡</div>
+          <div>
+            <h3 class="font-bold text-lg">Backend → Render (free tier)</h3>
+            <p class="text-sm text-gray-500">render.com</p>
+          </div>
+        </div>
+
+        <ol class="space-y-5 text-sm">
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">1</span>
+            <div>
+              <p class="font-semibold">Push your code to GitHub</p>
+              <p class="text-gray-500 mt-1">Create a repo, push the <code>server/</code> folder. Make sure <code>.env</code> is in <code>.gitignore</code> (never push it!).</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">2</span>
+            <div>
+              <p class="font-semibold">Create a new Web Service on Render</p>
+              <p class="text-gray-500 mt-1">Go to <a href="https://render.com" target="_blank" class="text-purple-600 underline">render.com</a> → New → Web Service → connect your GitHub repo.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">3</span>
+            <div>
+              <p class="font-semibold">Configure the service</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="render-cfg"><button class="copy-btn" onclick="copyCode('render-cfg', this)">Copy</button">Name:             my-chatbot-backend
+Root Directory:   server
+Runtime:          Python 3
+Build Command:    pip install -r requirements.txt
+Start Command:    uvicorn main:app --host 0.0.0.0 --port $PORT</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">4</span>
+            <div>
+              <p class="font-semibold">Add environment variable</p>
+              <p class="text-gray-500 mt-1">In Render's dashboard → Environment → Add Environment Variable:</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="render-env"><button class="copy-btn" onclick="copyCode('render-env', this)">Copy</button">Key:   ANTHROPIC_API_KEY
+Value: sk-ant-api03-YOUR-REAL-KEY</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">5</span>
+            <div>
+              <p class="font-semibold">Deploy and copy your backend URL</p>
+              <p class="text-gray-500 mt-1">After deployment, Render gives you a URL like:<br/>
+              <code class="bg-gray-100 px-2 py-0.5 rounded">https://my-chatbot-backend.onrender.com</code></p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Frontend → Netlify -->
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="text-2xl">🌐</div>
+          <div>
+            <h3 class="font-bold text-lg">Frontend → Netlify (free tier)</h3>
+            <p class="text-sm text-gray-500">netlify.com</p>
+          </div>
+        </div>
+
+        <ol class="space-y-5 text-sm">
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">1</span>
+            <div>
+              <p class="font-semibold">Update <code>API_BASE_URL</code> in <code>client/app.js</code></p>
+              <p class="text-gray-500 mt-1">Open <code>client/app.js</code> and change line 1 to your Render URL:</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="netlify-apiurl"><button class="copy-btn" onclick="copyCode('netlify-apiurl', this)">Copy</button">// Before (local):
+const API_BASE_URL = "http://localhost:8000";
+
+// After (production) — use YOUR Render URL:
+const API_BASE_URL = "https://my-chatbot-backend.onrender.com";</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">2</span>
+            <div>
+              <p class="font-semibold">Also update CORS in <code>server/main.py</code></p>
+              <p class="text-gray-500 mt-1">You'll know your Netlify URL after step 4 — come back and update this, then redeploy the backend.</p>
+              <div style="position:relative" class="mt-2">
+                <pre id="netlify-cors"><button class="copy-btn" onclick="copyCode('netlify-cors', this)">Copy</button">allow_origins=["https://my-chatbot.netlify.app"],  # your Netlify URL</pre>
+              </div>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">3</span>
+            <div>
+              <p class="font-semibold">Deploy to Netlify — drag and drop!</p>
+              <p class="text-gray-500 mt-1">Go to <a href="https://app.netlify.com/drop" target="_blank" class="text-purple-600 underline">app.netlify.com/drop</a> and drag your entire <code>client/</code> folder into the browser window. That's it!</p>
+              <p class="text-gray-500 mt-1">Alternatively, connect your GitHub repo → Site configuration → set <strong>Publish directory</strong> to <code>client</code>.</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <span class="step-badge text-xs" style="width:24px;height:24px;font-size:0.7rem">4</span>
+            <div>
+              <p class="font-semibold">Get your Netlify URL and update CORS</p>
+              <p class="text-gray-500 mt-1">Netlify gives you a URL like <code>https://amazing-teapot-abc123.netlify.app</code>. You can customise this to e.g. <code>my-chatbot.netlify.app</code>. Go back to step 2 above, update CORS, and redeploy the backend.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- URL summary -->
+      <div class="callout-ok rounded-xl p-5 text-sm">
+        <p class="font-semibold text-green-800 mb-3">✅ Summary: where each URL goes</p>
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="text-left text-green-700 border-b border-green-200">
+              <th class="pb-2 font-semibold">What</th>
+              <th class="pb-2 font-semibold">Where to put it</th>
+              <th class="pb-2 font-semibold">Example value</th>
+            </tr>
+          </thead>
+          <tbody class="text-green-900">
+            <tr class="border-b border-green-100">
+              <td class="py-2 font-mono">Render backend URL</td>
+              <td class="py-2"><code>API_BASE_URL</code> in <code>client/app.js</code></td>
+              <td class="py-2 font-mono">https://my-chatbot-backend.onrender.com</td>
+            </tr>
+            <tr class="border-b border-green-100">
+              <td class="py-2 font-mono">Netlify frontend URL</td>
+              <td class="py-2"><code>allow_origins</code> in <code>server/main.py</code></td>
+              <td class="py-2 font-mono">https://my-chatbot.netlify.app</td>
+            </tr>
+            <tr>
+              <td class="py-2 font-mono">ANTHROPIC_API_KEY</td>
+              <td class="py-2">Render dashboard → Environment</td>
+              <td class="py-2 font-mono">sk-ant-api03-…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         COMMON PROBLEMS
+    ═══════════════════════════════════════════════════════════════════ -->
+    <section id="problems" class="mb-14">
+      <h2 class="text-2xl font-bold mb-6">🛠️ Common Problems & Fixes</h2>
+
+      <div class="space-y-4">
+
+        <!-- Problem 1 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>ANTHROPIC_API_KEY is not set — RuntimeError on startup</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> You haven't created <code>server/.env</code>, or it's in the wrong directory, or the variable name is misspelled.</p>
+            <p class="mb-2"><strong>Fix:</strong></p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Make sure the file is literally named <code>.env</code> (not <code>.env.txt</code>)</li>
+              <li>It must be inside the <code>server/</code> folder (same directory as <code>main.py</code>)</li>
+              <li>The variable name must be exactly <code>ANTHROPIC_API_KEY</code> (all caps, no spaces)</li>
+              <li>Run uvicorn from <em>inside</em> the <code>server/</code> directory</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Problem 2 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>CORS error in browser console</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> The browser is blocking the request because the origin doesn't match what the server allows.</p>
+            <p class="mb-2"><strong>Fix (local):</strong></p>
+            <ol class="list-decimal list-inside space-y-1 mb-3">
+              <li>Make sure FastAPI is running (uvicorn on port 8000)</li>
+              <li>Make sure <code>API_BASE_URL</code> in <code>app.js</code> is <code>http://localhost:8000</code></li>
+              <li>Try serving the client with <code>python3 -m http.server 3000</code> instead of opening the file directly</li>
+            </ol>
+            <p class="mb-2"><strong>Fix (production):</strong> Replace <code>allow_origins=["*"]</code> in <code>main.py</code> with your exact Netlify URL, redeploy the backend.</p>
+          </div>
+        </details>
+
+        <!-- Problem 3 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>"Could not reach the server" — fetch fails</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> The FastAPI server isn't running, or the URL is wrong.</p>
+            <p class="mb-2"><strong>Fix:</strong></p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Confirm uvicorn is running in your terminal (you should see <code>Uvicorn running on http://127.0.0.1:8000</code>)</li>
+              <li>Open <a href="http://localhost:8000/health" target="_blank" class="text-purple-600 underline">http://localhost:8000/health</a> in your browser — it should return <code>{"status":"ok"}</code></li>
+              <li>Check <code>API_BASE_URL</code> in <code>app.js</code> matches the port uvicorn is using</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Problem 4 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>Invalid Anthropic API key — 401 / AuthenticationError</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> The key in <code>.env</code> is wrong, expired, or has extra spaces.</p>
+            <p class="mb-2"><strong>Fix:</strong></p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Open <code>server/.env</code> and check there are no quotes around the key: <code>ANTHROPIC_API_KEY=sk-ant-…</code> (no quotes)</li>
+              <li>No spaces around the <code>=</code> sign</li>
+              <li>Generate a fresh key at <a href="https://console.anthropic.com" target="_blank" class="text-purple-600 underline">console.anthropic.com</a> if needed</li>
+              <li>Restart uvicorn after changing <code>.env</code></li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Problem 5 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>Rate limit error — 429</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> You've sent too many requests in a short time (common with free Anthropic accounts).</p>
+            <p class="mb-2"><strong>Fix:</strong> Wait 60 seconds and try again. If it happens often, add credit to your Anthropic account or reduce <code>MAX_TOKENS</code> in <code>main.py</code>.</p>
+          </div>
+        </details>
+
+        <!-- Problem 6 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>Render app sleeps after 15 minutes (free tier)</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> Render's free Web Services spin down after inactivity. The first request after sleep takes ~30 seconds.</p>
+            <p class="mb-2"><strong>Fix options:</strong></p>
+            <ol class="list-decimal list-inside space-y-1">
+              <li>Accept the cold start (it's free!)</li>
+              <li>Use a cron job service (e.g., cron-job.org) to ping your <code>/health</code> endpoint every 14 minutes</li>
+              <li>Upgrade to Render's paid tier ($7/month) for always-on</li>
+            </ol>
+          </div>
+        </details>
+
+        <!-- Problem 7 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>Windows: <code>venv\Scripts\activate</code> gives an error</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> PowerShell execution policy blocks scripts.</p>
+            <p class="mb-2"><strong>Fix:</strong> Run this in PowerShell as Administrator, then try again:</p>
+            <div style="position:relative">
+              <pre id="win-fix"><button class="copy-btn" onclick="copyCode('win-fix', this)">Copy</button>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</pre>
+            </div>
+            <p class="mt-2">Or use Command Prompt (<code>cmd.exe</code>) instead of PowerShell.</p>
+          </div>
+        </details>
+
+        <!-- Problem 8 -->
+        <details class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <summary class="px-6 py-4 cursor-pointer font-semibold flex items-center gap-3 hover:bg-gray-50">
+            <span class="text-red-500">❌</span>
+            <span>Memory grows forever — too many sessions</span>
+          </summary>
+          <div class="px-6 pb-5 text-sm text-gray-600 border-t border-gray-100 pt-4">
+            <p class="mb-2"><strong>Cause:</strong> The server stores all conversation history in RAM with no cleanup.</p>
+            <p class="mb-2"><strong>Fix (simple):</strong> Add a max-history limit in <code>main.py</code> after appending to history:</p>
+            <div style="position:relative">
+              <pre id="mem-fix"><button class="copy-btn" onclick="copyCode('mem-fix', this)">Copy</button"># Keep only the last 40 messages (20 turns) per session
+if len(history) > 40:
+    history = history[-40:]
+sessions[session_id] = history</pre>
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-sm text-gray-400 pb-10">
+      <p>Built with ❤️ using FastAPI · Anthropic Claude · Plain HTML/CSS/JS</p>
+      <p class="mt-1">Open <code>client/index.html</code> in your browser after starting the backend to try it out.</p>
+    </footer>
+
+  </div><!-- end max-w-5xl -->
+
+  <script>
+    // ── Copy button logic ───────────────────────────────────────────────────
+    function copyCode(preId, btn) {
+      const pre = document.getElementById(preId);
+      // Get text but exclude the button text itself
+      let text = pre.innerText || pre.textContent;
+      // Remove "Copy" from the beginning if it crept in
+      text = text.replace(/^Copy\n?/, '');
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.background = 'rgba(16,185,129,0.25)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '';
+        }, 2000);
+      });
+    }
+
+    // ── OS tab switching ────────────────────────────────────────────────────
+    function switchTab(os) {
+      document.getElementById('tab-mac').classList.toggle('hidden', os !== 'mac');
+      document.getElementById('tab-win').classList.toggle('hidden', os !== 'win');
+
+      document.querySelectorAll('.os-tab').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.add('bg-white', 'text-gray-600');
+      });
+
+      const active = document.querySelector(`.os-tab[onclick="switchTab('${os}')"]`);
+      if (active) {
+        active.classList.add('active');
+        active.classList.remove('bg-white', 'text-gray-600');
+      }
+    }
+
+    // Highlight active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 100) current = sec.id;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('bg-purple-100', link.getAttribute('href') === '#' + current);
+        link.classList.toggle('text-purple-700', link.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+
+</body>
+</html>
